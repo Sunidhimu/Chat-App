@@ -6,7 +6,9 @@ const generateToken = require("../config/generateToken");
 //@route           GET /api/user?search=
 //@access          Public
 const allUsers = asyncHandler(async (req, res) => {
+   // Extracting the 'search' parameter from the query string in the request
   const keyword = req.query.search
+    // If 'search' parameter exists, create a search filter with regex matching on 'name' and 'email'
     ? {
         $or: [
           { name: { $regex: req.query.search, $options: "i" } },
@@ -14,7 +16,8 @@ const allUsers = asyncHandler(async (req, res) => {
         ],
       }
     : {};
-
+// Use the Mongoose 'find' method to query the User collection with the search filter
+  // Exclude the currently authenticated user from the result using '$ne' (not equal)
   const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
   res.send(users);
 });
@@ -27,7 +30,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   if (!name || !email || !password) {
     res.status(400);
-    throw new Error("Please Enter all the Feilds");
+    throw new Error("Please Enter all the Fields");
   }
 
   const userExists = await User.findOne({ email });

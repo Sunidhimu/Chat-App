@@ -3,11 +3,8 @@
 .App {
   min-height: 100vh;
   display: flex;
-  background-image: url("./background.png");
-  background-position: center;
-  background-size: cover;
+  background-color: deepskyblue;
 }
-
 ::-webkit-scrollbar {
   width: 0px;
 }
