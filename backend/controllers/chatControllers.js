@@ -6,13 +6,15 @@ const User = require("../models/userModel");
 //@route           POST /api/chat/
 //@access          Protected
 const accessChat = asyncHandler(async (req, res) => {
+  // Extract userId from the request body
   const { userId } = req.body;
 
   if (!userId) {
+     // Check if userId is provided, return 400 if not
     console.log("UserId param not sent with request");
     return res.sendStatus(400);
   }
-
+ // Check if a one-to-one chat already exists between the users
   var isChat = await Chat.find({
     isGroupChat: false,
     $and: [
@@ -27,7 +29,7 @@ const accessChat = asyncHandler(async (req, res) => {
     path: "latestMessage.sender",
     select: "name pic email",
   });
-
+// If a chat exists, send the chat details; otherwise, create a new chat
   if (isChat.length > 0) {
     res.send(isChat[0]);
   } else {
@@ -55,7 +57,9 @@ const accessChat = asyncHandler(async (req, res) => {
 //@route           GET /api/chat/
 //@access          Protected
 const fetchChats = asyncHandler(async (req, res) => {
+   
   try {
+    // Fetch all chats where the user is a participant
     Chat.find({ users: { $elemMatch: { $eq: req.user._id } } })
       .populate("users", "-password")
       .populate("groupAdmin", "-password")
@@ -66,6 +70,7 @@ const fetchChats = asyncHandler(async (req, res) => {
           path: "latestMessage.sender",
           select: "name pic email",
         });
+         // Send the fetched chats
         res.status(200).send(results);
       });
   } catch (error) {
@@ -79,7 +84,8 @@ const fetchChats = asyncHandler(async (req, res) => {
 //@access          Protected
 const createGroupChat = asyncHandler(async (req, res) => {
   if (!req.body.users || !req.body.name) {
-    return res.status(400).send({ message: "Please Fill all the feilds" });
+   // Check if required parameters are provided
+    return res.status(400).send({ message: "Please Fill all the fields" });
   }
 
   var users = JSON.parse(req.body.users);
@@ -90,8 +96,10 @@ const createGroupChat = asyncHandler(async (req, res) => {
       .send("More than 2 users are required to form a group chat");
   }
 
-  users.push(req.user);
+  // Add the current user to the list of users
 
+  users.push(req.user);
+// Create a new group chat
   try {
     const groupChat = await Chat.create({
       chatName: req.body.name,
@@ -116,7 +124,7 @@ const createGroupChat = asyncHandler(async (req, res) => {
 // @access  Protected
 const renameGroup = asyncHandler(async (req, res) => {
   const { chatId, chatName } = req.body;
-
+ // Update the chat's name
   const updatedChat = await Chat.findByIdAndUpdate(
     chatId,
     {
