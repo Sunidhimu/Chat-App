@@ -2,6 +2,7 @@ import { Button } from "@chakra-ui/button";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { Input } from "@chakra-ui/input";
 import { Box, Text } from "@chakra-ui/layout";
+
 import {
   Menu,
   MenuButton,
@@ -17,7 +18,7 @@ import {
   DrawerOverlay,
 } from "@chakra-ui/modal";
 import { Tooltip } from "@chakra-ui/tooltip";
-import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
+import { BellIcon, ChevronDownIcon} from "@chakra-ui/icons";
 import { Avatar } from "@chakra-ui/avatar";
 import { useHistory } from "react-router-dom";
 import { useState } from "react";
@@ -37,6 +38,7 @@ function SideDrawer() {
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState(false);
+  
 
   const {
     setSelectedChat,
@@ -121,7 +123,7 @@ function SideDrawer() {
       });
     }
   };
-
+  
   return (
     <>
       <Box
@@ -142,7 +144,7 @@ function SideDrawer() {
           </Button>
         </Tooltip>
         <Text fontSize="2xl" fontFamily="Work sans">
-          Talk-A-Tive
+          Clarify
         </Text>
         <div>
           <Menu>
@@ -223,4 +225,4 @@ function SideDrawer() {
   );
 }
 
-export default SideDrawer;
+  export default SideDrawer;
